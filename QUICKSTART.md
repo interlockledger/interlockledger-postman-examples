@@ -19,7 +19,7 @@ Before using this collection, you will need to import the PFX certificate and se
 ### Importing this Collection
 * Open Postman
 * Click **Import**
-* Choose [IL2 API Example.postman_collection.json](postman/IL2 API Example.postman_collection.json)
+* Choose [IL2 API Example.postman_collection.json](postman/IL2%20API%20Example.postman_collection.json)
 * Click **Import**
 
 ### Importing PFX certificate
