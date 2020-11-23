@@ -1,0 +1,566 @@
+{
+	"info": {
+		"_postman_id": "4f5591df-6a48-4440-a3e7-4aadedd9b203",
+		"name": "IL2 API Example",
+		"description": "# InterlockLedger REST API Requests Examples\n\nThis collection has examples on how to use a few requests of the InterlockLedger (IL2) REST API.\n\n> **Before using:** \n> * Import the PFX certificate to your node URL in Postman settings;\n> * Change the `{{node_address}}` collection variable to the URL of your node.\n\n## About IL2 REST API\n\nAll interactions with the IL2 nodes and chains are made using the REST API.\nThis collection does not have detailed descriptions of the APIs body and responses, please check on the API manual or the API Swagger:\n\n* `{{node_address}}`/swagger\n\n## How to use this collection\n\nWe are using collection variables to store some responses to be used in other requests. Check the description of the requests.\n\n## About\n\nThis collection was written and tested using:\n\n* InterlockLedger node v4.1.12\n* InterlockLedger REST API v4.2\n* Postman for Linux - Version 7.36.0",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "0-Node",
+			"item": [
+				{
+					"name": "Node details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{node_address}}",
+							"host": [
+								"{{node_address}}"
+							]
+						},
+						"description": "This will return a summary of the details of the node, such as:\n\n* Name of the node;\n* The IL2 network of the node;\n* Owner information\n* List of chains in the node."
+					},
+					"response": []
+				}
+			],
+			"description": "Node requests.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "15bddbc2-3235-44eb-9677-eca56d8a6ca2",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e061f1e-ae63-4a19-bef9-6d082f2fcfa9",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "1-Chains",
+			"item": [
+				{
+					"name": "Retrieve chains in the node",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c551423c-7809-46f5-bfd3-a93e33ceb79b",
+								"exec": [
+									"let response = pm.response.json();",
+									"let first_chain = response[0];",
+									"pm.collectionVariables.set(\"chain_id\", first_chain.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{node_address}}/chain",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"chain"
+							]
+						},
+						"description": "Return the list of chains in the node.\n\n> Will store the id of the first chain in the collection variable `{{chain_id}}`."
+					},
+					"response": []
+				},
+				{
+					"name": "Chain Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{node_address}}/chain/{{chain_id}}",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"chain",
+								"{{chain_id}}"
+							]
+						},
+						"description": "Get the details of a specific chain.\n\n> `{{chain_id}}` collection variable is retrieved using `Retrieve chains in the node` request."
+					},
+					"response": []
+				},
+				{
+					"name": "Check active apps in the chain",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{node_address}}/chain/{{chain_id}}/activeApps",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"chain",
+								"{{chain_id}}",
+								"activeApps"
+							]
+						},
+						"description": "Show the active apps in a chain.\n\n> `{{chain_id}}` collection variable is retrieved using `Retrieve chains in the node` request."
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "2-JSON Documents",
+			"item": [
+				{
+					"name": "Add JSON Document record",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "81fd0dd8-d3fe-4af0-a18b-029aa0970394",
+								"exec": [
+									"let response = pm.response.json();",
+									"pm.collectionVariables.set(\"json_serial\", response.serial);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n    \"Attribute 1\": \"Value 1\",\n    \"Attribute 2\": \"Value 2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{node_address}}/jsonDocuments@{{chain_id}}",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"jsonDocuments@{{chain_id}}"
+							]
+						},
+						"description": "Add a JSON Document to the chain with id equals to `{{chain_id}}`.\n\n>* `{{chain_id}}` collection variable is retrieved using `Retrieve chains in the node` request.\n> * Will store the JSON document serial in the collection variable `{{json_serial}}`."
+					},
+					"response": []
+				},
+				{
+					"name": "List JSON Document records",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{node_address}}/jsonDocuments@{{chain_id}}",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"jsonDocuments@{{chain_id}}"
+							]
+						},
+						"description": "Get a list of the JSON document records of the chain with id equals to `{{chain_id}}`.\n\n> `{{chain_id}}` collection variable is retrieved using `Retrieve chains in the node` request."
+					},
+					"response": []
+				},
+				{
+					"name": "Get a specific JSON Document record",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{node_address}}/jsonDocuments@{{chain_id}}/{{json_serial}}",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"jsonDocuments@{{chain_id}}",
+								"{{json_serial}}"
+							]
+						},
+						"description": "Get a list of the JSON document records of the chain with id equals to `{{chain_id}}`.\n\n> * `{{chain_id}}` collection variable is retrieved using `Retrieve chains in the node` request.\n> * `{{json_serial}}` collection variable is retrieved using `Add JSON Document record` request."
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e8722835-d17f-4a14-9c8f-5d7b0e91410a",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c887b2ba-e9bc-4648-a22e-35c64e8f7148",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "3-Multi-Documents",
+			"item": [
+				{
+					"name": "Multi-Documents  transactios configuration",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{node_address}}/documents/configuration",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"documents",
+								"configuration"
+							]
+						},
+						"description": "Get the configuration of the Multi-Documents transactions."
+					},
+					"response": []
+				},
+				{
+					"name": "Begin multidocument upload",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "388eb3c1-0eb8-477a-9d3a-512143c84e4a",
+								"exec": [
+									"let response = pm.response.json();",
+									"pm.collectionVariables.set(\"transaction_id\", response.transactionId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"chain\" : \"{{chain_id}}\",\n    \"comment\": \"Postman transaction.\"\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{node_address}}/documents/transaction",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"documents",
+								"transaction"
+							]
+						},
+						"description": "Begin a multi-document transaction in the chain with id equals to `{{chain_id}}`.\n\nThe chain id is passed in the body, see the documentation for more details on the body attributes.\n\n> * `{{chain_id}}` collection variable is retrieved using `Retrieve chains in the node` request.\n> * Will store the transaction id in the collection variable `{{transaction_id}}`."
+					},
+					"response": []
+				},
+				{
+					"name": "Transaction Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{node_address}}/documents/transaction/{{transaction_id}}",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"documents",
+								"transaction",
+								"{{transaction_id}}"
+							]
+						},
+						"description": "Check the status of the transaction with id equals to `transaction_id`.\n\n> `{{transaction_id}}` collection variable is retrieved using `Begin multidocument upload` request."
+					},
+					"response": []
+				},
+				{
+					"name": "Upload file durint transaction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "/home/chinodyt/Desktop/Upload/file1.txt"
+							}
+						},
+						"url": {
+							"raw": "{{node_address}}/documents/transaction/{{transaction_id}}?name=file2.txt",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"documents",
+								"transaction",
+								"{{transaction_id}}"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "file2.txt"
+								}
+							]
+						},
+						"description": "Upload a file in the transaction with id equals to `{{transaction_id}}`. \n\nParameters:\n* `name`: Filename\n* `comment` (optional): Additional description.\n\nHeaders:\n* `Content-Type`: Mime-type of the file to upload. Check compatibility in the configuration (`Multi-Documents  transactios configuration`).\n\n\n> `{{transaction_id}}` collection variable is retrieved using `Begin multidocument upload` request."
+					},
+					"response": []
+				},
+				{
+					"name": "Commit transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5de842fe-7a69-4716-a83b-78bd417c5adc",
+								"exec": [
+									"let response = pm.response.json();",
+									"pm.collectionVariables.set(\"locator\", response);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{node_address}}/documents/transaction/{{transaction_id}}/commit",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"documents",
+								"transaction",
+								"{{transaction_id}}",
+								"commit"
+							]
+						},
+						"description": "Commit the files uploaded in the transction with id equals to `{{transaction_id}}`.\n\n> * `{{transaction_id}}` collection variable is retrieved using `Begin multidocument upload` request.\n> * Will store the locator in the collection variable `{{locator}}`."
+					},
+					"response": []
+				},
+				{
+					"name": "Get multidocument metada",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{node_address}}/documents/{{locator}}/metadata",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"documents",
+								"{{locator}}",
+								"metadata"
+							]
+						},
+						"description": "Get informations about the multi-document record located at `{{locator}}`.\n\n> `{{locator}}` collection variable is retrieved using `Commit transaction` request."
+					},
+					"response": []
+				},
+				{
+					"name": "Download multidocument by index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{node_address}}/documents/{{locator}}/{{file_index}}",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"documents",
+								"{{locator}}",
+								"{{file_index}}"
+							]
+						},
+						"description": "Download a specific file in the multi-document record located at `{{locator}}`.\nYou can specify the file you want to download using the `{{file_index}}` (default value is 0).\n\n> `{{locator}}` collection variable is retrieved using `Commit transaction` request."
+					},
+					"response": []
+				},
+				{
+					"name": "Download multidocument zip",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{node_address}}/documents/{{locator}}/zip",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"documents",
+								"{{locator}}",
+								"zip"
+							]
+						},
+						"description": "Download all files in the multi-document record located at {{locator}} in a compressed file.\n\n> `{{locator}}` collection variable is retrieved using `Commit transaction` request."
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "(DEPRECATED)-Document",
+			"item": [
+				{
+					"name": "(DEPRECATED) List documents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{node_address}}/documents@{{chain_id}}",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"documents@{{chain_id}}"
+							]
+						},
+						"description": "List the single document records stored in the chain with id equals to `{{chain_id}}`.\n\n> `{{chain_id}}` collection variable is retrieved using `Retrieve chains in the node` request."
+					},
+					"response": []
+				},
+				{
+					"name": "(DEPRECATED) Add document",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "Test file"
+						},
+						"url": {
+							"raw": "{{node_address}}/documents@{{chain_id}}?name=test.txt&cipher=None",
+							"host": [
+								"{{node_address}}"
+							],
+							"path": [
+								"documents@{{chain_id}}"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "test.txt"
+								},
+								{
+									"key": "cipher",
+									"value": "None"
+								}
+							]
+						},
+						"description": "Store a file in a document record in the chain with id equals to `{{chain_id}}`.\n\n> `{{chain_id}}` collection variable is retrieved using `Retrieve chains in the node` request."
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "8ff649c9-4968-44fb-9fd5-927b9016629f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "a817991a-e86a-4b5b-afe9-4bc99ed2ee30",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "176d63f2-d75c-4d13-95bc-e35794e83780",
+			"key": "node_address",
+			"value": "https://node.il2:32022"
+		},
+		{
+			"id": "992b1b92-d7b9-46ad-8fe3-a6c8b3f0931a",
+			"key": "chain_id",
+			"value": ""
+		},
+		{
+			"id": "d0098ff4-626d-41ce-b738-5d89e966fe60",
+			"key": "transaction_id",
+			"value": ""
+		},
+		{
+			"id": "1810219b-68ce-4b11-a33f-09bf94ae4b56",
+			"key": "locator",
+			"value": ""
+		},
+		{
+			"id": "ace7f14c-f1a3-49b5-9eca-57be523e9573",
+			"key": "json_serial",
+			"value": ""
+		},
+		{
+			"id": "7374f415-bb1b-4a4f-a70c-49fcc1e00f55",
+			"key": "file_index",
+			"value": "0"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
