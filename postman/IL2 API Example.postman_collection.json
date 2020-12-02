@@ -274,7 +274,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"chain\" : \"{{chain_id}}\",\n    \"comment\": \"Postman transaction.\"\n}\n\n",
+							"raw": "{\n    \"chain\" : \"{{chain_id}}\",\n    \"comment\": \"Postman transaction.\",\n    \"encryption\" : \"PBKDF2-SHA256-AES128-HIGH\",\n    \"password\": \"cXdlcnR5MTIzNDU2\"\n}\n\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -291,7 +291,7 @@
 								"transaction"
 							]
 						},
-						"description": "Begin a multi-document transaction in the chain with id equals to `{{chain_id}}`.\n\nThe chain id is passed in the body, see the documentation for more details on the body attributes.\n\n> * `{{chain_id}}` collection variable is retrieved using `Retrieve chains in the node` request.\n> * Will store the transaction id in the collection variable `{{transaction_id}}`."
+						"description": "Begin a multi-document transaction in the chain with id equals to `{{chain_id}}`.\n\nYou can pass some details about the transaction in the body of the request as JSON.\nThe id of the chain is required and you can add some optional attributes:\n* `comment`: Aditional description about the transaction;\n* `encryption`: If encryption is needed, indicates the type o encryption. Examples:\n    * \"PBKDF2-SHA256-AES256-LOW\" \n    * \"PBKDF2-SHA512-AES256-MID\"\n    * \"PBKDF2-SHA256-AES128-HIGH\"\n* `password`: The encryption password. The password must be passed using Base64 encoding.\n\nPlease, see the documentation for more details on the body attributes.\n\n\n\n> * `{{chain_id}}` collection variable is retrieved using `Retrieve chains in the node` request.\n> * Will store the transaction id in the collection variable `{{transaction_id}}`."
 					},
 					"response": []
 				},
@@ -334,7 +334,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{node_address}}/documents/transaction/{{transaction_id}}?name=file2.txt",
+							"raw": "{{node_address}}/documents/transaction/{{transaction_id}}?name=file2.txt&comment=Aditional comment",
 							"host": [
 								"{{node_address}}"
 							],
@@ -347,6 +347,10 @@
 								{
 									"key": "name",
 									"value": "file2.txt"
+								},
+								{
+									"key": "comment",
+									"value": "Aditional comment"
 								}
 							]
 						},
@@ -532,32 +536,32 @@
 	],
 	"variable": [
 		{
-			"id": "176d63f2-d75c-4d13-95bc-e35794e83780",
+			"id": "2b763cc3-51ef-4f8e-9d36-7c948aed40fc",
 			"key": "node_address",
 			"value": "https://node.il2:32022"
 		},
 		{
-			"id": "992b1b92-d7b9-46ad-8fe3-a6c8b3f0931a",
+			"id": "976a7183-d731-4129-b514-1f9241939746",
 			"key": "chain_id",
 			"value": ""
 		},
 		{
-			"id": "d0098ff4-626d-41ce-b738-5d89e966fe60",
+			"id": "6070a2be-57c4-44aa-8eae-fff395652fbc",
 			"key": "transaction_id",
 			"value": ""
 		},
 		{
-			"id": "1810219b-68ce-4b11-a33f-09bf94ae4b56",
+			"id": "15e8ef5f-c143-4235-8600-bf234ffe69a7",
 			"key": "locator",
 			"value": ""
 		},
 		{
-			"id": "ace7f14c-f1a3-49b5-9eca-57be523e9573",
+			"id": "fde09305-b9c6-410c-9557-698b9d3bb966",
 			"key": "json_serial",
 			"value": ""
 		},
 		{
-			"id": "7374f415-bb1b-4a4f-a70c-49fcc1e00f55",
+			"id": "bd403c6a-dd64-4da9-9787-1b916bc91dc0",
 			"key": "file_index",
 			"value": "0"
 		}
